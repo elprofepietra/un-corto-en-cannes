@@ -1,0 +1,948 @@
+<title>Un Corto en Cannes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#121017;
+    --panel:#1c1a24;
+    --panel-2:#242130;
+    --panel-3:#2c2838;
+    --line:#3a3646;
+    --gold:#c9a24a;
+    --gold-soft:#e3c576;
+    --red:#a11f38;
+    --red-soft:#c94b62;
+    --text:#f3f1f6;
+    --muted:#a49dbb;
+    --muted-2:#7d7695;
+    --good:#4fae82;
+    --bad:#e0655a;
+    --font-display:'Playfair Display', Georgia, 'Times New Roman', serif;
+    --font-body:'Manrope', -apple-system, 'Segoe UI', Arial, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--gold); color:#1a1620;}
+
+  a{color:var(--gold-soft);}
+
+  /* ---------- sprocket motif ---------- */
+  .sprockets{
+    display:flex; justify-content:space-between; padding:0 18px;
+    opacity:.55;
+  }
+  .sprockets span{width:6px;height:6px;border-radius:50%;background:var(--gold);}
+
+  /* ---------- topbar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    background:linear-gradient(180deg, var(--ink) 80%, transparent);
+    padding-top:10px;
+    border-bottom:1px solid var(--line);
+    backdrop-filter: blur(6px);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto; padding:10px 20px 16px;
+    display:flex; align-items:center; gap:24px; flex-wrap:wrap;
+  }
+  .brand{display:flex; align-items:center; gap:12px;}
+  .clap{width:34px;height:26px;position:relative;flex:none;}
+  .clap .top{position:absolute; top:0; left:0; width:100%; height:8px; background:var(--gold);
+    background-image:repeating-linear-gradient(115deg, #1a1620 0 5px, var(--gold) 5px 10px);
+    border-radius:2px 2px 0 0; transform-origin:left top;}
+  .clap .body{position:absolute; top:8px; left:0; width:100%; height:18px; background:var(--panel-3);
+    border:1px solid var(--line); border-radius:0 0 3px 3px;}
+  .brand-text{display:flex; flex-direction:column; line-height:1.15;}
+  .brand-text .eyebrow{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold-soft); font-weight:700;}
+  .brand-text .name{font-family:var(--font-display); font-weight:700; font-size:20px;}
+
+  .stepper{display:flex; align-items:center; gap:8px; margin-left:auto; flex-wrap:wrap;}
+  .step{
+    display:flex; align-items:center; gap:8px; padding:7px 12px 7px 7px;
+    border-radius:999px; background:var(--panel); border:1px solid var(--line);
+    font-size:12.5px; color:var(--muted); font-weight:600; white-space:nowrap;
+  }
+  .step .n{
+    width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:var(--panel-3); color:var(--muted); font-size:11.5px; font-weight:800; flex:none;
+  }
+  .step.active{border-color:var(--gold); color:var(--text); background:rgba(201,162,74,.12);}
+  .step.active .n{background:var(--gold); color:#1a1620;}
+  .step.done .n{background:var(--good); color:#0d1f16;}
+  .step.done{color:var(--text);}
+  .step-arrow{color:var(--muted-2); font-size:12px;}
+
+  .ghost-btn{
+    background:transparent; border:1px solid var(--line); color:var(--muted);
+    padding:8px 14px; border-radius:8px; font-family:var(--font-body); font-weight:600; font-size:12.5px;
+    cursor:pointer; transition:.15s ease;
+  }
+  .ghost-btn:hover{border-color:var(--gold); color:var(--gold-soft);}
+
+  /* ---------- layout ---------- */
+  main{max-width:1180px; margin:0 auto; padding:30px 20px 90px;}
+  .phase{display:none;}
+  .phase.visible{display:block; animation:fadein .35s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  @media (prefers-reduced-motion: reduce){ .phase.visible{animation:none;} }
+
+  h1.stage-title{
+    font-family:var(--font-display); font-size:clamp(26px,3.4vw,38px); font-weight:700;
+    margin:0 0 6px; text-wrap:balance;
+  }
+  p.stage-sub{color:var(--muted); font-size:15px; max-width:65ch; margin:0 0 26px;}
+
+  .panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:22px 24px;
+  }
+
+  /* ---------- buttons ---------- */
+  .btn{
+    font-family:var(--font-body); font-weight:700; font-size:14px; letter-spacing:.01em;
+    padding:12px 22px; border-radius:9px; border:1px solid transparent; cursor:pointer;
+    display:inline-flex; align-items:center; gap:8px; transition:.15s ease;
+  }
+  .btn-primary{background:var(--gold); color:#1a1620;}
+  .btn-primary:hover{background:var(--gold-soft); transform:translateY(-1px);}
+  .btn-primary:disabled{background:var(--panel-3); color:var(--muted-2); cursor:not-allowed; transform:none;}
+  .btn-secondary{background:transparent; border-color:var(--line); color:var(--text);}
+  .btn-secondary:hover{border-color:var(--gold-soft); color:var(--gold-soft);}
+  .btn-row{display:flex; gap:12px; align-items:center; margin-top:22px; flex-wrap:wrap;}
+
+  /* ---------- WBS drawer ---------- */
+  .wbs-toggle{position:fixed; right:20px; bottom:20px; z-index:50;}
+  .wbs-toggle button{
+    background:var(--panel-3); border:1px solid var(--gold); color:var(--gold-soft);
+    padding:11px 16px; border-radius:999px; font-weight:700; font-size:13px; cursor:pointer;
+    box-shadow:0 6px 20px rgba(0,0,0,.4);
+  }
+  .drawer-backdrop{position:fixed; inset:0; background:rgba(8,7,11,.6); z-index:60; display:none;}
+  .drawer-backdrop.open{display:block;}
+  .drawer{
+    position:fixed; top:0; right:0; height:100%; width:min(420px,92vw); background:var(--panel);
+    border-left:1px solid var(--line); z-index:61; transform:translateX(100%); transition:transform .25s ease;
+    overflow-y:auto; padding:24px;
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer h3{font-family:var(--font-display); font-size:20px; margin:0 0 4px;}
+  .drawer .close{position:absolute; top:18px; right:18px; background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer;}
+  .wbs-tree{margin-top:18px; font-size:13.5px;}
+  .wbs-tree .lvl0{font-family:var(--font-body); font-weight:800; color:var(--gold-soft); padding:8px 0; border-bottom:1px solid var(--line); margin-bottom:8px;}
+  .wbs-tree .lvl1{font-weight:700; color:var(--text); margin:12px 0 4px; padding-left:2px;}
+  .wbs-tree .lvl2{font-weight:700; color:var(--muted); margin:8px 0 3px; padding-left:16px; font-size:12.5px; text-transform:uppercase; letter-spacing:.04em;}
+  .wbs-tree .lvl3{padding-left:30px; color:var(--text); margin:2px 0; position:relative; font-size:13px;}
+  .wbs-tree .lvl3::before{content:"·"; color:var(--gold); margin-right:6px;}
+  .wbs-note{margin-top:16px; padding:10px 12px; background:var(--panel-2); border-radius:8px; font-size:12.5px; color:var(--muted); font-style:italic;}
+
+  /* ================= PHASE 1: activities table ================= */
+  .group-title{
+    font-size:12px; text-transform:uppercase; letter-spacing:.1em; font-weight:800; color:var(--gold-soft);
+    margin:26px 0 10px;
+  }
+  .group-title:first-child{margin-top:0;}
+  table.acts{width:100%; border-collapse:collapse;}
+  table.acts th{
+    text-align:left; font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted-2);
+    padding:0 10px 8px; font-weight:700;
+  }
+  table.acts td{padding:8px 10px; vertical-align:middle; border-top:1px solid var(--line);}
+  table.acts tr.act-row{background:var(--panel-2); transition:.2s ease;}
+  table.acts tr.act-row td:first-child{border-radius:10px 0 0 10px;}
+  table.acts tr.act-row td:last-child{border-radius:0 10px 10px 0;}
+  table.acts tr.act-row{outline:2px solid transparent; outline-offset:-2px;}
+  table.acts tr.act-row.correct{outline-color:var(--good);}
+  table.acts tr.act-row.incorrect{outline-color:var(--bad);}
+  .id-badge{
+    width:30px; height:30px; border-radius:50%; background:var(--panel-3); color:var(--gold-soft);
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; flex:none;
+  }
+  .act-name{font-size:13.5px; font-weight:600; min-width:190px;}
+  .dur-input{
+    width:64px; padding:7px 8px; border-radius:7px; border:1px solid var(--line); background:var(--ink);
+    color:var(--text); font-family:var(--font-body); font-weight:700; font-size:13.5px; text-align:center;
+  }
+  .dur-input:focus{outline:none; border-color:var(--gold);}
+  .pred-chips{display:flex; flex-wrap:wrap; gap:5px; max-width:320px;}
+  .chip{
+    padding:4px 9px; border-radius:999px; border:1px solid var(--line); background:var(--ink);
+    color:var(--muted); font-size:11.5px; font-weight:700; cursor:pointer; user-select:none; transition:.15s ease;
+  }
+  .chip.on{background:var(--gold); border-color:var(--gold); color:#1a1620;}
+  .chip.none-chip{font-style:italic;}
+  .row-feedback{font-size:11.5px; color:var(--muted-2); min-width:70px;}
+  .row-feedback.ok{color:var(--good); font-weight:700;}
+  .row-feedback.no{color:var(--bad); font-weight:700;}
+
+  .score-banner{
+    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+    margin-top:22px; padding:14px 18px; border-radius:10px; background:var(--panel-2); border:1px solid var(--line);
+  }
+  .score-banner .big{font-family:var(--font-display); font-size:22px; font-weight:700;}
+  .score-banner.ok{border-color:var(--good);}
+
+  /* ================= PHASE 2: network ================= */
+  .net-toolbar{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:16px;}
+  .net-hint{font-size:12.5px; color:var(--muted);}
+  .net-hint b{color:var(--gold-soft);}
+  .legend{display:flex; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--muted);}
+  .legend .sw{display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:5px; vertical-align:-1px;}
+
+  .net-scroll{overflow-x:auto; border-radius:12px; border:1px solid var(--line); background:
+    radial-gradient(1200px 400px at 10% -10%, rgba(201,162,74,.06), transparent 60%), var(--ink);}
+  #network{position:relative; height:600px; min-width:1240px;}
+  #edgeSvg{position:absolute; inset:0; width:100%; height:100%; pointer-events:none;}
+  .node{
+    position:absolute; width:150px; height:92px; border-radius:10px; background:var(--panel);
+    border:1.5px solid var(--line); cursor:pointer; user-select:none; transition:.15s ease;
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+  .node:hover{border-color:var(--gold-soft); transform:translateY(-1px);}
+  .node.selected{border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,162,74,.25);}
+  .node.critical{border-color:var(--red-soft);}
+  .node .nhead{
+    background:var(--panel-3); padding:6px 8px; font-size:11px; font-weight:800; line-height:1.25;
+  }
+  .node.critical .nhead{background:var(--red); color:#fff;}
+  .node .nid{color:var(--gold-soft); margin-right:4px;}
+  .node.critical .nid{color:#ffd9df;}
+  .node .nbody{padding:6px 8px; font-size:10.5px; color:var(--muted); flex:1; display:flex; flex-direction:column; justify-content:center; gap:2px;}
+  .node .nbody .row2{font-variant-numeric:tabular-nums; color:var(--text);}
+  .node .nbody .row3{font-variant-numeric:tabular-nums; color:var(--muted-2);}
+  .node.critical .nbody .row3{color:var(--red-soft); font-weight:700;}
+
+  .net-status{margin-top:16px; padding:12px 16px; border-radius:10px; background:var(--panel-2); border:1px solid var(--line); font-size:13px; color:var(--muted);}
+  .net-status.ok{border-color:var(--good); color:var(--text);}
+  .net-status b{color:var(--text);}
+  .cp-banner{
+    margin-top:14px; padding:16px 20px; border-radius:12px; background:linear-gradient(135deg, rgba(161,31,56,.18), rgba(201,162,74,.08));
+    border:1px solid var(--red-soft); display:none;
+  }
+  .cp-banner.show{display:block;}
+  .cp-banner .path{font-family:var(--font-display); font-size:18px; font-weight:700; color:var(--gold-soft);}
+
+  /* ================= PHASE 3: gantt ================= */
+  .gantt-rows{display:flex; flex-direction:column; gap:6px;}
+  .grow{display:grid; grid-template-columns:34px 1fr 70px 130px 1fr; gap:10px; align-items:center; padding:7px 10px; border-radius:8px; background:var(--panel-2);}
+  .grow .gid{font-weight:800; color:var(--gold-soft); font-size:12.5px;}
+  .grow .gname{font-size:12.5px; font-weight:600;}
+  .grow .gdur{font-size:11.5px; color:var(--muted); text-align:center; font-variant-numeric:tabular-nums;}
+  .es-input{width:64px; padding:6px 8px; border-radius:6px; border:1px solid var(--line); background:var(--ink); color:var(--text); font-weight:700; text-align:center; font-variant-numeric:tabular-nums;}
+  .es-input:focus{outline:none; border-color:var(--gold);}
+  .grow.correct{outline:2px solid var(--good); outline-offset:-2px;}
+  .grow.incorrect{outline:2px solid var(--bad); outline-offset:-2px;}
+  .es-fb{font-size:11px; color:var(--muted-2);}
+  .es-fb.ok{color:var(--good); font-weight:700;}
+  .es-fb.no{color:var(--bad);}
+  .gantt-head{display:grid; grid-template-columns:34px 1fr 70px 130px 1fr; gap:10px; padding:0 10px 6px; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted-2); font-weight:700;}
+
+  .gantt-chart{margin-top:26px; overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:var(--ink); padding:18px;}
+  #ganttSvg{display:block;}
+
+  /* ================= END SCREEN ================= */
+  .end-wrap{text-align:center; padding:50px 20px 10px;}
+  .end-wrap .eyebrow{font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold-soft); font-weight:800;}
+  .end-wrap h1{font-family:var(--font-display); font-size:clamp(30px,5vw,52px); margin:10px 0 6px;}
+  .tier{font-family:var(--font-display); font-size:22px; color:var(--gold-soft); margin:8px 0 30px;}
+  .end-stats{display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:34px;}
+  .end-stat{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px 26px; min-width:150px;}
+  .end-stat .v{font-family:var(--font-display); font-size:30px; color:var(--gold-soft); font-weight:700;}
+  .end-stat .l{font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-top:4px;}
+
+  footer.credits{max-width:640px; margin:10px auto 0; color:var(--muted-2); font-size:12.5px; line-height:2;}
+
+  @media (max-width:720px){
+    #network{min-width:1100px;}
+    .grow, .gantt-head{grid-template-columns:28px 1fr 54px 96px;}
+    .grow .gname{font-size:11.5px;}
+  }
+</style>
+
+<div class="sprockets">
+  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="clap"><div class="top"></div><div class="body"></div></div>
+      <div class="brand-text">
+        <span class="eyebrow">Gerenciamiento de Proyectos · UADE</span>
+        <span class="name">Un Corto en Cannes</span>
+      </div>
+    </div>
+    <div class="stepper" id="stepper">
+      <div class="step" data-step="1"><span class="n">1</span> Actividades</div>
+      <span class="step-arrow">→</span>
+      <div class="step" data-step="2"><span class="n">2</span> Diagrama de red</div>
+      <span class="step-arrow">→</span>
+      <div class="step" data-step="3"><span class="n">3</span> Gantt</div>
+    </div>
+    <button class="ghost-btn" id="resetBtn">Reiniciar</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ INTRO ============ -->
+  <section class="phase visible" id="phase-intro">
+    <h1 class="stage-title">Sos el Project Manager del corto</h1>
+    <p class="stage-sub">La productora te contrató para producir el cortometraje de apertura del Festival de Cannes 2026. El Scope Statement ya está firmado y el WBS, definido. Ahora armá el cronograma: actividades, diagrama de red y Gantt.</p>
+    <div class="panel">
+      <p style="margin:0 0 14px; font-size:14px; color:var(--muted);">El juego tiene tres etapas:</p>
+      <ol style="margin:0 0 6px; padding-left:20px; font-size:14px; color:var(--text); display:flex; flex-direction:column; gap:10px;">
+        <li><b>Actividades:</b> asignale a cada tarea del WBS su duración y su(s) predecesora(s).</li>
+        <li><b>Diagrama de red:</b> conectá las actividades según sus precedencias y descubrí el camino crítico.</li>
+        <li><b>Gantt:</b> ubicá cada actividad en la semana correcta del cronograma.</li>
+      </ol>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="startBtn">Empezar</button>
+        <button class="btn btn-secondary" id="introWbsBtn">Ver el WBS</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 1 ============ -->
+  <section class="phase" id="phase-1">
+    <h1 class="stage-title">Paso 1 · Armá la lista de actividades</h1>
+    <p class="stage-sub">Para cada tarea del WBS, indicá su duración en semanas y marcá de qué actividad(es) depende para poder empezar. Si no depende de ninguna, dejá el chip <span class="chip none-chip" style="pointer-events:none; padding:2px 8px;">ninguna</span> seleccionado.</p>
+    <div class="panel">
+      <div id="actsContainer"></div>
+      <div class="score-banner" id="scoreBanner">
+        <div>Resultado: <span class="big" id="scoreText">0 / 15</span> correctas</div>
+        <div style="font-size:12.5px; color:var(--muted);" id="scoreHint">Completá los 15 campos y presioná Verificar.</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="checkActsBtn">Verificar</button>
+        <button class="btn btn-secondary" id="contActsBtn" disabled>Continuar al diagrama de red →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 2 ============ -->
+  <section class="phase" id="phase-2">
+    <h1 class="stage-title">Paso 2 · Armá el diagrama de red (AON)</h1>
+    <p class="stage-sub">Hacé clic en una actividad y luego en otra para crear la conexión de precedencia entre ambas. Un segundo clic sobre el mismo par la elimina. Cuando la red esté completa, calculá el camino crítico.</p>
+
+    <div class="net-toolbar">
+      <div class="net-hint">Conexiones correctas: <b id="edgeCount">0 / 14</b></div>
+      <div class="legend">
+        <span><span class="sw" style="background:#3a3646;"></span>sin verificar</span>
+        <span><span class="sw" style="background:var(--good);"></span>correcta</span>
+        <span><span class="sw" style="background:var(--bad);"></span>incorrecta</span>
+        <span><span class="sw" style="background:var(--gold-soft);"></span>sugerida (pista)</span>
+      </div>
+    </div>
+
+    <div class="net-scroll">
+      <div id="network">
+        <svg id="edgeSvg"></svg>
+      </div>
+    </div>
+
+    <div class="net-status" id="netStatus">Seleccioná dos actividades para crear la primera conexión. Recordá revisar el listado que armaste en el paso 1.</div>
+
+    <div class="cp-banner" id="cpBanner">
+      <div style="font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:700;">Camino crítico</div>
+      <div class="path" id="cpPath">—</div>
+      <div style="font-size:13px; color:var(--muted); margin-top:4px;" id="cpDuration"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="checkNetBtn">Verificar red</button>
+      <button class="btn btn-secondary" id="hintNetBtn">Pista</button>
+      <button class="btn btn-primary" id="contNetBtn" disabled>Continuar al Gantt →</button>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 3 ============ -->
+  <section class="phase" id="phase-3">
+    <h1 class="stage-title">Paso 3 · Armá el Gantt</h1>
+    <p class="stage-sub">Con la red ya validada, indicá en qué semana empieza cada actividad (su ES: inicio más temprano). El proyecto comienza en la semana 0, el lunes 5 de enero de 2026.</p>
+    <div class="panel">
+      <div class="gantt-head"><div></div><div>Actividad</div><div>Duración</div><div>Semana de inicio</div><div></div></div>
+      <div class="gantt-rows" id="ganttRows"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="checkGanttBtn">Verificar Gantt</button>
+        <button class="btn btn-secondary" id="finishBtn" disabled>Ver resultado final →</button>
+      </div>
+    </div>
+
+    <div class="gantt-chart" id="ganttChartWrap" style="display:none;">
+      <svg id="ganttSvg"></svg>
+    </div>
+  </section>
+
+  <!-- ============ END ============ -->
+  <section class="phase" id="phase-end">
+    <div class="end-wrap">
+      <div class="eyebrow">Rodaje terminado</div>
+      <h1>¡Cronograma completo!</h1>
+      <div class="tier" id="tierText">Palma de Oro</div>
+      <div class="end-stats">
+        <div class="end-stat"><div class="v">16</div><div class="l">Semanas de duración</div></div>
+        <div class="end-stat"><div class="v">27-abr</div><div class="l">Fecha de cierre</div></div>
+        <div class="end-stat"><div class="v" id="finalScore">100</div><div class="l">Puntaje final</div></div>
+      </div>
+      <button class="btn btn-primary" id="playAgainBtn">Jugar de nuevo</button>
+      <footer class="credits">
+        UN CORTO EN CANNES — Ejercitación de Gerenciamiento de Proyectos<br>
+        UADE · FACO · DEGES — Docente: Lic. Ornela Palombo<br>
+        Basado en el caso "Un Corto en Cannes"
+      </footer>
+    </div>
+  </section>
+
+</main>
+
+<div class="wbs-toggle"><button id="wbsFab">WBS de referencia</button></div>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<div class="drawer" id="drawer">
+  <button class="close" id="drawerClose">✕</button>
+  <h3>Estructura de Desglose del Trabajo</h3>
+  <div style="font-size:12px; color:var(--muted);">Posterior a la firma del Scope Statement (la Post-Producción queda excluida)</div>
+  <div class="wbs-tree">
+    <div class="lvl0">1.0 Un Corto en Cannes</div>
+    <div class="lvl1">1.1 Pre-Producción</div>
+    <div class="lvl2">1.1.1 Locación</div>
+    <div class="lvl3">Búsqueda de locación (A)</div>
+    <div class="lvl3">Alquiler de locación (B)</div>
+    <div class="lvl2">1.1.2 Actores</div>
+    <div class="lvl3">Desarrollo de perfiles (C)</div>
+    <div class="lvl3">Audición (D)</div>
+    <div class="lvl3">Contratación de actores (E)</div>
+    <div class="lvl2">1.1.3 Recursos Materiales</div>
+    <div class="lvl3">Listado de recursos (F)</div>
+    <div class="lvl3">Búsqueda de proveedores (G)</div>
+    <div class="lvl3">Análisis de alternativas (H)</div>
+    <div class="lvl3">Contratación de proveedores (I)</div>
+    <div class="lvl3">Envío y disposición (J)</div>
+    <div class="lvl1">1.2 Producción</div>
+    <div class="lvl2">1.2.1 Catering</div>
+    <div class="lvl3">Búsqueda de alternativas (K)</div>
+    <div class="lvl3">Análisis de propuestas (L)</div>
+    <div class="lvl3">Contratación de catering (M)</div>
+    <div class="lvl2">1.2.2 Rodaje</div>
+    <div class="lvl3">Filmación / Rodaje (N)</div>
+    <div class="lvl3">Resguardo y entrega (O)</div>
+  </div>
+  <div class="wbs-note">La letra entre paréntesis es el ID de la actividad que vas a usar en el juego.</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ===================== DATA ===================== */
+  var TASKS = [
+    {id:"A", name:"Búsqueda de locación", dur:4, preds:[], group:"Locación", rank:0, lane:0},
+    {id:"B", name:"Alquiler de locación", dur:1, preds:["A"], group:"Locación", rank:1, lane:0},
+    {id:"C", name:"Desarrollo de perfiles de actores", dur:3, preds:[], group:"Actores", rank:0, lane:1},
+    {id:"D", name:"Audición de actores", dur:6, preds:["C"], group:"Actores", rank:1, lane:1},
+    {id:"E", name:"Contratación de actores", dur:1, preds:["D"], group:"Actores", rank:2, lane:1},
+    {id:"F", name:"Listado de recursos materiales", dur:2, preds:[], group:"Recursos Materiales", rank:0, lane:2},
+    {id:"G", name:"Búsqueda de proveedores", dur:4, preds:["F"], group:"Recursos Materiales", rank:1, lane:2},
+    {id:"H", name:"Análisis de alternativas", dur:1, preds:["G"], group:"Recursos Materiales", rank:2, lane:2},
+    {id:"I", name:"Contratación de proveedores", dur:1, preds:["H"], group:"Recursos Materiales", rank:3, lane:2},
+    {id:"J", name:"Envío y disposición en locación", dur:1, preds:["I","B"], group:"Recursos Materiales", rank:4, lane:2},
+    {id:"K", name:"Búsqueda de alternativas de catering", dur:3, preds:[], group:"Catering", rank:0, lane:3},
+    {id:"L", name:"Análisis de propuestas de catering", dur:2, preds:["K"], group:"Catering", rank:1, lane:3},
+    {id:"M", name:"Contratación del catering", dur:1, preds:["L"], group:"Catering", rank:2, lane:3},
+    {id:"N", name:"Rodaje (filmación)", dur:6, preds:["E","J","M"], group:"Rodaje", rank:5, lane:2},
+    {id:"O", name:"Resguardo y entrega de material (hito)", dur:0, preds:["N"], group:"Rodaje", rank:6, lane:2}
+  ];
+  var GROUP_ORDER = ["Locación","Actores","Recursos Materiales","Catering","Rodaje"];
+  var byId = {};
+  TASKS.forEach(function(t){ byId[t.id] = t; });
+  var ALL_IDS = TASKS.map(function(t){ return t.id; });
+
+  var CORRECT_EDGES = []; // "A-B" strings
+  TASKS.forEach(function(t){ t.preds.forEach(function(p){ CORRECT_EDGES.push(p+"-"+t.id); }); });
+
+  /* ===================== STATE ===================== */
+  var state = {
+    step: 0,
+    acts: {},          // id -> {dur, preds:Set}
+    actsAttempts: 0,
+    edges: {},          // "from-to" -> true
+    netAttempts: 0,
+    netVerified: false,
+    cpm: null,
+    gantt: {},          // id -> es value entered
+    ganttAttempts: 0
+  };
+  TASKS.forEach(function(t){ state.acts[t.id] = {dur:null, preds:{}}; state.gantt[t.id] = null; });
+
+  /* ===================== NAV / STEPPER ===================== */
+  var phases = ["phase-intro","phase-1","phase-2","phase-3","phase-end"];
+  function showPhase(name){
+    phases.forEach(function(p){ document.getElementById(p).classList.toggle("visible", p===name); });
+    var stepMap = {"phase-1":1, "phase-2":2, "phase-3":3};
+    var current = stepMap[name] || 0;
+    document.querySelectorAll(".step").forEach(function(el){
+      var n = parseInt(el.dataset.step,10);
+      el.classList.toggle("active", n===current);
+      el.classList.toggle("done", n<current);
+    });
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+
+  document.getElementById("startBtn").addEventListener("click", function(){ showPhase("phase-1"); });
+
+  /* ===================== WBS DRAWER ===================== */
+  var drawer = document.getElementById("drawer"), backdrop = document.getElementById("drawerBackdrop");
+  function openDrawer(){ drawer.classList.add("open"); backdrop.classList.add("open"); }
+  function closeDrawer(){ drawer.classList.remove("open"); backdrop.classList.remove("open"); }
+  document.getElementById("wbsFab").addEventListener("click", openDrawer);
+  document.getElementById("introWbsBtn").addEventListener("click", openDrawer);
+  document.getElementById("drawerClose").addEventListener("click", closeDrawer);
+  backdrop.addEventListener("click", closeDrawer);
+
+  /* ===================== PHASE 1: ACTIVITIES ===================== */
+  var actsContainer = document.getElementById("actsContainer");
+
+  function buildActs(){
+    var html = "";
+    GROUP_ORDER.forEach(function(g){
+      html += '<div class="group-title">'+g+'</div>';
+      html += '<table class="acts"><thead><tr><th style="width:38px;"></th><th>Actividad</th><th style="width:90px;">Duración (sem)</th><th>Predecesora(s)</th><th style="width:80px;"></th></tr></thead><tbody>';
+      TASKS.filter(function(t){ return t.group===g; }).forEach(function(t){
+        html += '<tr class="act-row" data-id="'+t.id+'">';
+        html += '<td><div class="id-badge">'+t.id+'</div></td>';
+        html += '<td class="act-name">'+t.name+'</td>';
+        html += '<td><input type="number" min="0" max="10" class="dur-input" data-id="'+t.id+'" placeholder="—"></td>';
+        html += '<td><div class="pred-chips" data-id="'+t.id+'">';
+        html += '<span class="chip none-chip on" data-none="1">ninguna</span>';
+        ALL_IDS.filter(function(o){ return o!==t.id; }).forEach(function(o){
+          html += '<span class="chip" data-pred="'+o+'">'+o+'</span>';
+        });
+        html += '</div></td>';
+        html += '<td class="row-feedback" data-fb="'+t.id+'"></td>';
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+    });
+    actsContainer.innerHTML = html;
+
+    // duration inputs
+    actsContainer.querySelectorAll(".dur-input").forEach(function(inp){
+      inp.addEventListener("input", function(){
+        state.acts[inp.dataset.id].dur = inp.value === "" ? null : parseInt(inp.value,10);
+      });
+    });
+
+    // predecessor chips
+    actsContainer.querySelectorAll(".pred-chips").forEach(function(box){
+      var id = box.dataset.id;
+      box.querySelectorAll(".chip").forEach(function(chip){
+        chip.addEventListener("click", function(){
+          if(chip.dataset.none){
+            box.querySelectorAll(".chip[data-pred]").forEach(function(c){ c.classList.remove("on"); });
+            chip.classList.add("on");
+            state.acts[id].preds = {};
+          } else {
+            chip.classList.toggle("on");
+            box.querySelector(".chip.none-chip").classList.remove("on");
+            var pid = chip.dataset.pred;
+            if(chip.classList.contains("on")){ state.acts[id].preds[pid]=true; }
+            else{ delete state.acts[id].preds[pid]; }
+            var anyOn = Array.prototype.some.call(box.querySelectorAll(".chip[data-pred]"), function(c){ return c.classList.contains("on"); });
+            if(!anyOn){ box.querySelector(".chip.none-chip").classList.add("on"); }
+          }
+        });
+      });
+    });
+  }
+  buildActs();
+
+  function checkActs(){
+    state.actsAttempts++;
+    var correctCount = 0;
+    TASKS.forEach(function(t){
+      var entry = state.acts[t.id];
+      var row = actsContainer.querySelector('.act-row[data-id="'+t.id+'"]');
+      var fb = actsContainer.querySelector('[data-fb="'+t.id+'"]');
+      var durOk = entry.dur === t.dur;
+      var predSet = Object.keys(entry.preds).sort().join(",");
+      var correctSet = t.preds.slice().sort().join(",");
+      var predOk = predSet === correctSet;
+      var ok = durOk && predOk;
+      row.classList.toggle("correct", ok);
+      row.classList.toggle("incorrect", !ok);
+      fb.textContent = ok ? "✓ correcta" : "revisar";
+      fb.className = "row-feedback " + (ok ? "ok" : "no");
+      if(ok) correctCount++;
+    });
+    var banner = document.getElementById("scoreBanner");
+    var scoreText = document.getElementById("scoreText");
+    var scoreHint = document.getElementById("scoreHint");
+    scoreText.textContent = correctCount + " / " + TASKS.length;
+    banner.classList.toggle("ok", correctCount===TASKS.length);
+    var contBtn = document.getElementById("contActsBtn");
+    if(correctCount === TASKS.length){
+      scoreHint.textContent = "¡Perfecto! Ya podés avanzar al diagrama de red.";
+      contBtn.disabled = false;
+    } else {
+      scoreHint.textContent = state.actsAttempts >= 3
+        ? "Revisá el enunciado del caso: fijate qué tarea debe estar lista antes de empezar cada una."
+        : "Corregí las filas marcadas en rojo y volvé a verificar.";
+      contBtn.disabled = false; // allow moving on regardless, but we'll auto-fill correct data
+    }
+  }
+  document.getElementById("checkActsBtn").addEventListener("click", checkActs);
+  document.getElementById("contActsBtn").addEventListener("click", function(){
+    // carry forward validated (correct) data so later phases build on accurate info
+    TASKS.forEach(function(t){ state.acts[t.id] = {dur:t.dur, preds:{}}; t.preds.forEach(function(p){ state.acts[t.id].preds[p]=true; }); });
+    buildNetwork();
+    showPhase("phase-2");
+  });
+
+  /* ===================== PHASE 2: NETWORK ===================== */
+  var CARD_W=150, CARD_H=92, COL_STEP=170, LANE_STEP=128, ORIGIN_X=25, ORIGIN_Y=30;
+  var netEl = document.getElementById("network");
+  var svg = document.getElementById("edgeSvg");
+  var selected = null;
+
+  function nodePos(t){
+    return { x: ORIGIN_X + t.rank*COL_STEP, y: ORIGIN_Y + t.lane*LANE_STEP };
+  }
+
+  function buildNetwork(){
+    // size container
+    var maxRank = Math.max.apply(null, TASKS.map(function(t){return t.rank;}));
+    var maxLane = Math.max.apply(null, TASKS.map(function(t){return t.lane;}));
+    var w = ORIGIN_X*2 + maxRank*COL_STEP + CARD_W;
+    var h = ORIGIN_Y*2 + maxLane*LANE_STEP + CARD_H;
+    netEl.style.minWidth = w+"px";
+    netEl.style.height = h+"px";
+    svg.setAttribute("width", w);
+    svg.setAttribute("height", h);
+    svg.innerHTML = '<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#7d7695"></path></marker>' +
+      '<marker id="arrowGood" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#4fae82"></path></marker>' +
+      '<marker id="arrowBad" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#e0655a"></path></marker>' +
+      '<marker id="arrowCrit" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#c94b62"></path></marker></defs>';
+
+    // remove old nodes
+    netEl.querySelectorAll(".node").forEach(function(n){ n.remove(); });
+
+    TASKS.forEach(function(t){
+      var p = nodePos(t);
+      var div = document.createElement("div");
+      div.className = "node";
+      div.dataset.id = t.id;
+      div.style.left = p.x+"px";
+      div.style.top = p.y+"px";
+      div.innerHTML = '<div class="nhead"><span class="nid">'+t.id+'</span>'+t.name+'</div>' +
+        '<div class="nbody"><span class="row2" data-slot="mid">Duración: '+t.dur+' sem</span><span class="row3" data-slot="bottom"> </span></div>';
+      div.addEventListener("click", function(){ onNodeClick(t.id); });
+      netEl.appendChild(div);
+    });
+
+    drawEdges();
+  }
+
+  function edgeKey(a,b){
+    var ta = byId[a], tb = byId[b];
+    if(ta.rank <= tb.rank) return a+"-"+b;
+    return b+"-"+a;
+  }
+
+  function onNodeClick(id){
+    var nodeEl = netEl.querySelector('.node[data-id="'+id+'"]');
+    if(selected === null){
+      selected = id;
+      nodeEl.classList.add("selected");
+      setStatus('Ahora hacé clic en la actividad que <b>depende de '+id+'</b> (o en la misma para cancelar).');
+      return;
+    }
+    if(selected === id){
+      nodeEl.classList.remove("selected");
+      selected = null;
+      setStatus('Selección cancelada. Elegí dos actividades para conectar.');
+      return;
+    }
+    var key = edgeKey(selected, id);
+    if(state.edges[key]){
+      delete state.edges[key];
+      setStatus('Conexión '+key.replace("-"," → ")+' eliminada.');
+    } else {
+      state.edges[key] = true;
+      setStatus('Conexión creada: '+key.replace("-"," → ")+'.');
+    }
+    netEl.querySelector('.node[data-id="'+selected+'"]').classList.remove("selected");
+    selected = null;
+    drawEdges();
+    updateEdgeCount();
+  }
+
+  function setStatus(html, ok){
+    var el = document.getElementById("netStatus");
+    el.innerHTML = html;
+    el.classList.toggle("ok", !!ok);
+  }
+
+  function drawEdges(coloring){
+    // coloring: null (neutral), or object with per-edge state after verify
+    var parts = ['<defs>'+svg.querySelector("defs").innerHTML+'</defs>'];
+    Object.keys(state.edges).forEach(function(key){
+      var ids = key.split("-");
+      var a = byId[ids[0]], b = byId[ids[1]];
+      var pa = nodePos(a), pb = nodePos(b);
+      var x1 = pa.x+CARD_W, y1 = pa.y+CARD_H/2, x2 = pb.x, y2 = pb.y+CARD_H/2;
+      var color = "#7d7695", marker = "arrow", width=2;
+      if(coloring){
+        if(coloring.good[key]){ color="#4fae82"; marker="arrowGood"; }
+        else if(coloring.bad[key]){ color="#e0655a"; marker="arrowBad"; }
+      }
+      if(coloring && coloring.critical && coloring.critical[key]){ color="#c94b62"; marker="arrowCrit"; width=3; }
+      var midx=(x1+x2)/2;
+      parts.push('<path d="M'+x1+','+y1+' C '+midx+','+y1+' '+midx+','+y2+' '+x2+','+y2+'" fill="none" stroke="'+color+'" stroke-width="'+width+'" marker-end="url(#'+marker+')" opacity="0.9"/>');
+    });
+    if(coloring && coloring.missingHint){
+      coloring.missingHint.forEach(function(key){
+        var ids = key.split("-");
+        var a = byId[ids[0]], b = byId[ids[1]];
+        var pa = nodePos(a), pb = nodePos(b);
+        var x1 = pa.x+CARD_W, y1 = pa.y+CARD_H/2, x2 = pb.x, y2 = pb.y+CARD_H/2;
+        var midx=(x1+x2)/2;
+        parts.push('<path d="M'+x1+','+y1+' C '+midx+','+y1+' '+midx+','+y2+' '+x2+','+y2+'" fill="none" stroke="#e3c576" stroke-width="2" stroke-dasharray="5,4" opacity="0.85"/>');
+      });
+    }
+    svg.innerHTML = parts.join("");
+  }
+
+  function updateEdgeCount(){
+    var count = Object.keys(state.edges).filter(function(k){ return CORRECT_EDGES.indexOf(k)!==-1; }).length;
+    document.getElementById("edgeCount").textContent = count + " / " + CORRECT_EDGES.length;
+  }
+
+  function checkNetwork(){
+    state.netAttempts++;
+    var good = {}, bad = {};
+    Object.keys(state.edges).forEach(function(k){
+      if(CORRECT_EDGES.indexOf(k)!==-1) good[k]=true; else bad[k]=true;
+    });
+    var missing = CORRECT_EDGES.filter(function(k){ return !state.edges[k]; });
+    var coloring = {good:good, bad:bad};
+    if(state.netAttempts >= 3 && missing.length){ coloring.missingHint = missing; }
+    drawEdges(coloring);
+    updateEdgeCount();
+
+    if(missing.length===0 && Object.keys(bad).length===0){
+      var cpm = computeCPM();
+      state.cpm = cpm;
+      state.netVerified = true;
+      revealCPM(cpm);
+      setStatus('<b>Red validada.</b> Se calculó el camino crítico a partir de tus conexiones.', true);
+      document.getElementById("contNetBtn").disabled = false;
+    } else {
+      var msg = "Te faltan " + missing.length + " conexión(es) correcta(s)";
+      if(Object.keys(bad).length) msg += " y tenés " + Object.keys(bad).length + " incorrecta(s) (en rojo)";
+      msg += ".";
+      if(state.netAttempts >= 3 && missing.length) msg += " Te marcamos algunas sugeridas en punteado dorado.";
+      setStatus(msg);
+    }
+  }
+  document.getElementById("checkNetBtn").addEventListener("click", checkNetwork);
+  document.getElementById("hintNetBtn").addEventListener("click", function(){
+    var missing = CORRECT_EDGES.filter(function(k){ return !state.edges[k]; });
+    if(!missing.length){ setStatus("Ya tenés todas las conexiones correctas. Presioná Verificar red."); return; }
+    var sample = missing[Math.floor(Math.random()*missing.length)];
+    var ids = sample.split("-");
+    setStatus('Pista: revisá si <b>'+ids[1]+'</b> depende de <b>'+ids[0]+'</b> (repasá el listado del paso 1).');
+  });
+
+  function computeCPM(){
+    // topological order via Kahn's algorithm over state.edges
+    var adj = {}, indeg = {};
+    ALL_IDS.forEach(function(id){ adj[id]=[]; indeg[id]=0; });
+    Object.keys(state.edges).forEach(function(k){
+      var p = k.split("-"); adj[p[0]].push(p[1]); indeg[p[1]]++;
+    });
+    var queue = ALL_IDS.filter(function(id){ return indeg[id]===0; });
+    var order = [];
+    while(queue.length){
+      var n = queue.shift();
+      order.push(n);
+      adj[n].forEach(function(m){ indeg[m]--; if(indeg[m]===0) queue.push(m); });
+    }
+    var ES={}, EF={};
+    order.forEach(function(id){
+      var preds = ALL_IDS.filter(function(p){ return state.edges[p+"-"+id]; });
+      var es = preds.length ? Math.max.apply(null, preds.map(function(p){ return EF[p]; })) : 0;
+      ES[id]=es; EF[id]=es+byId[id].dur;
+    });
+    var projectDuration = Math.max.apply(null, ALL_IDS.map(function(id){ return EF[id]; }));
+    var LF={}, LS={};
+    order.slice().reverse().forEach(function(id){
+      var succs = ALL_IDS.filter(function(s){ return state.edges[id+"-"+s]; });
+      var lf = succs.length ? Math.min.apply(null, succs.map(function(s){ return LS[s]; })) : projectDuration;
+      LF[id]=lf; LS[id]=lf-byId[id].dur;
+    });
+    var slack={}, critical={};
+    ALL_IDS.forEach(function(id){ slack[id]=LS[id]-ES[id]; critical[id]= slack[id]===0; });
+
+    // reconstruct critical path (ids where critical, chained by edges)
+    var criticalEdges = {};
+    Object.keys(state.edges).forEach(function(k){
+      var p = k.split("-");
+      if(critical[p[0]] && critical[p[1]] && EF[p[0]]===ES[p[1]]) criticalEdges[k]=true;
+    });
+    var startNodes = ALL_IDS.filter(function(id){ return critical[id] && ES[id]===0; });
+    var path = [];
+    if(startNodes.length){
+      var cur = startNodes[0];
+      path.push(cur);
+      var guard=0;
+      while(guard++<30){
+        var next = ALL_IDS.find ? ALL_IDS.find(function(id){ return criticalEdges[cur+"-"+id]; }) : null;
+        if(!next){
+          for(var i=0;i<ALL_IDS.length;i++){ if(criticalEdges[cur+"-"+ALL_IDS[i]]){ next = ALL_IDS[i]; break; } }
+        }
+        if(!next) break;
+        path.push(next);
+        cur = next;
+      }
+    }
+    return {ES:ES, EF:EF, LS:LS, LF:LF, slack:slack, critical:critical, duration:projectDuration, path:path, criticalEdges:criticalEdges};
+  }
+
+  function revealCPM(cpm){
+    TASKS.forEach(function(t){
+      var nodeEl = netEl.querySelector('.node[data-id="'+t.id+'"]');
+      nodeEl.classList.toggle("critical", cpm.critical[t.id]);
+      nodeEl.querySelector('[data-slot="mid"]').textContent = "ES "+cpm.ES[t.id]+"  Dur "+t.dur+"  EF "+cpm.EF[t.id];
+      nodeEl.querySelector('[data-slot="bottom"]').textContent = "LS "+cpm.LS[t.id]+"  Holg "+cpm.slack[t.id]+"  LF "+cpm.LF[t.id];
+    });
+    drawEdges({good:{}, bad:{}, critical:cpm.criticalEdges});
+    var banner = document.getElementById("cpBanner");
+    banner.classList.add("show");
+    document.getElementById("cpPath").textContent = cpm.path.join(" → ");
+    document.getElementById("cpDuration").textContent = "Duración total del proyecto: " + cpm.duration + " semanas · holgura 0 en toda la ruta crítica.";
+  }
+
+  document.getElementById("contNetBtn").addEventListener("click", function(){
+    buildGantt();
+    showPhase("phase-3");
+  });
+
+  /* ===================== PHASE 3: GANTT ===================== */
+  var ganttRows = document.getElementById("ganttRows");
+  function buildGantt(){
+    var html = "";
+    TASKS.forEach(function(t){
+      html += '<div class="grow" data-id="'+t.id+'">';
+      html += '<div class="gid">'+t.id+'</div>';
+      html += '<div class="gname">'+t.name+'</div>';
+      html += '<div class="gdur">'+t.dur+' sem</div>';
+      html += '<div><input type="number" min="0" max="16" class="es-input" data-id="'+t.id+'" placeholder="?"></div>';
+      html += '<div class="es-fb" data-fb="'+t.id+'"></div>';
+      html += '</div>';
+    });
+    ganttRows.innerHTML = html;
+    ganttRows.querySelectorAll(".es-input").forEach(function(inp){
+      inp.addEventListener("input", function(){ state.gantt[inp.dataset.id] = inp.value===""?null:parseInt(inp.value,10); });
+    });
+  }
+
+  function checkGantt(){
+    state.ganttAttempts++;
+    var cpm = state.cpm;
+    var allOk = true;
+    TASKS.forEach(function(t){
+      var row = ganttRows.querySelector('.grow[data-id="'+t.id+'"]');
+      var fb = ganttRows.querySelector('[data-fb="'+t.id+'"]');
+      var ok = state.gantt[t.id] === cpm.ES[t.id];
+      row.classList.toggle("correct", ok);
+      row.classList.toggle("incorrect", !ok);
+      if(ok){ fb.textContent="✓"; fb.className="es-fb ok"; }
+      else {
+        fb.textContent = state.ganttAttempts>=2 ? "pista: ES "+cpm.ES[t.id] : "revisar";
+        fb.className="es-fb no";
+        allOk = false;
+      }
+    });
+    if(allOk){
+      renderGanttChart(cpm);
+      document.getElementById("finishBtn").disabled = false;
+    }
+  }
+  document.getElementById("checkGanttBtn").addEventListener("click", checkGantt);
+
+  function renderGanttChart(cpm){
+    var wrap = document.getElementById("ganttChartWrap");
+    wrap.style.display = "block";
+    var svgEl = document.getElementById("ganttSvg");
+    var weekW = 46, rowH = 26, labelW = 230, top = 34, totalWeeks = cpm.duration;
+    var w = labelW + totalWeeks*weekW + 20, h = top + TASKS.length*rowH + 30;
+    svgEl.setAttribute("viewBox","0 0 "+w+" "+h);
+    svgEl.setAttribute("width", w);
+    svgEl.setAttribute("height", h);
+    var parts = [];
+    for(var wk=0; wk<=totalWeeks; wk+=2){
+      var x = labelW + wk*weekW;
+      parts.push('<line x1="'+x+'" y1="'+(top-8)+'" x2="'+x+'" y2="'+(top+TASKS.length*rowH)+'" stroke="#3a3646" stroke-width="1"/>');
+      parts.push('<text x="'+x+'" y="'+(top-14)+'" fill="#a49dbb" font-size="10" text-anchor="middle" font-family="Manrope, sans-serif">'+wk+'</text>');
+    }
+    TASKS.forEach(function(t,i){
+      var y = top + i*rowH;
+      parts.push('<text x="0" y="'+(y+rowH/2+4)+'" fill="'+(cpm.critical[t.id]?'#c94b62':'#f3f1f6')+'" font-size="11" font-weight="700" font-family="Manrope, sans-serif">'+t.id+'  '+t.name+'</text>');
+      var bx = labelW + cpm.ES[t.id]*weekW;
+      if(t.dur>0){
+        var bw = Math.max(t.dur*weekW-4,4);
+        parts.push('<rect x="'+bx+'" y="'+(y+4)+'" width="'+bw+'" height="'+(rowH-10)+'" rx="4" fill="'+(cpm.critical[t.id]?'#a11f38':'#5c5773')+'"/>');
+      } else {
+        var cy = y+rowH/2;
+        parts.push('<path d="M'+(bx-6)+','+cy+' L'+bx+','+(cy-6)+' L'+(bx+6)+','+cy+' L'+bx+','+(cy+6)+' Z" fill="#a11f38"/>');
+      }
+    });
+    var endX = labelW + totalWeeks*weekW;
+    parts.push('<line x1="'+endX+'" y1="'+(top-8)+'" x2="'+endX+'" y2="'+(top+TASKS.length*rowH)+'" stroke="#c9a24a" stroke-width="1.5" stroke-dasharray="4,3"/>');
+    parts.push('<text x="'+endX+'" y="'+(top+TASKS.length*rowH+18)+'" fill="#c9a24a" font-size="11" font-weight="700" text-anchor="end" font-family="Manrope, sans-serif">Fin: 27-abr-2026</text>');
+    svgEl.innerHTML = parts.join("");
+  }
+
+  document.getElementById("finishBtn").addEventListener("click", function(){
+    var wrongActs = TASKS.length; // recompute a light score
+    var score = 100 - (state.actsAttempts-1)*4 - (state.netAttempts-1)*6 - (state.ganttAttempts-1)*5;
+    score = Math.max(55, Math.min(100, Math.round(score)));
+    document.getElementById("finalScore").textContent = score;
+    var tier = score>=90 ? "Palma de Oro" : score>=75 ? "Palma de Plata" : score>=60 ? "Palma de Bronce" : "Mención Especial del Jurado";
+    document.getElementById("tierText").textContent = tier;
+    showPhase("phase-end");
+  });
+
+  document.getElementById("playAgainBtn").addEventListener("click", resetGame);
+  document.getElementById("resetBtn").addEventListener("click", function(){
+    if(confirm("¿Reiniciar el juego desde el principio?")) resetGame();
+  });
+
+  function resetGame(){
+    state.acts = {}; state.edges = {}; state.gantt = {};
+    state.actsAttempts=0; state.netAttempts=0; state.ganttAttempts=0; state.netVerified=false; state.cpm=null;
+    TASKS.forEach(function(t){ state.acts[t.id] = {dur:null, preds:{}}; state.gantt[t.id] = null; });
+    buildActs();
+    document.getElementById("cpBanner").classList.remove("show");
+    document.getElementById("ganttChartWrap").style.display="none";
+    document.getElementById("contActsBtn").disabled = true;
+    document.getElementById("contNetBtn").disabled = true;
+    document.getElementById("finishBtn").disabled = true;
+    document.getElementById("scoreBanner").classList.remove("ok");
+    document.getElementById("scoreText").textContent = "0 / "+TASKS.length;
+    document.getElementById("scoreHint").textContent = "Completá los 15 campos y presioná Verificar.";
+    showPhase("phase-intro");
+  }
+
+})();
+</script>
